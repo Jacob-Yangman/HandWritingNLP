@@ -2,7 +2,7 @@
 encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/22/2024
-@Desc  : Word2Vec1.1 -- 间隔获取currWord
+@Desc  : Word2Vec1.5 -- 间隔获取currWord
 单轮训练时间预估：9~24m
 适当增加neighbors采样范围
 设置步长step (<nGram)
