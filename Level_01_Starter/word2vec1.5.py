@@ -72,7 +72,8 @@ class MyModel():
         """
         global lr
         self.x, self.y = x, y
-        self.hiddenLayer = x @ self.W1  # (n, embLen)
+        # self.hiddenLayer = x @ self.W1  # (n, embLen)
+        self.hiddenLayer = self.W1[np.argmax(self.x, axis=-1)]  # (n, embLen)
         predict = self.hiddenLayer @ self.W2  # (n, wordsNum)
         self.proba = self.softmax(predict)  # (n, wordsNum)
         epsilon = 1e-10

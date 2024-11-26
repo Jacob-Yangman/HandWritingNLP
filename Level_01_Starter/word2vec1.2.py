@@ -2,8 +2,8 @@
 encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/22/2024
-@Desc  : 基于原味儿Word2Vec优化w1矩阵乘法运算
-单轮训练时间预估：2~5H【优化提升有限】
+@Desc  : Word2Vec1.2 -- 批量送入neighborsWords
+单轮训练时间预估：20~50m
 """
 import os
 import jieba
@@ -23,10 +23,10 @@ MODEL = "cbow"  # 或skip-gram
 
 
 def mysoftmax(x):
-    xMax = np.max(x, axis=-1)
-    x -= xMax
+    xMax = np.max(x, axis=-1, keepdims=True)
+    x = x - xMax
     ex = np.exp(x)
-    exSum = np.sum(ex, axis=-1)
+    exSum = np.sum(ex, axis=-1, keepdims=True)
     return ex / exSum
 
 
@@ -65,36 +65,35 @@ class MyModel():
 
     def forward(self, x, y):
         """
-        :param x: (1, wordsNum)
-        :param y: (1, wordsNum)
+        :param x: (n, wordsNum)
+        :param y: (n, wordsNum)
         :return: loss
         """
         global lr
         self.x, self.y = x, y
-        # self.hiddenLayer = x @ self.W1  # (1, embLen)
-        self.hiddenLayer = self.W1[np.argmax(self.x)].reshape(1, -1)  # (1, embLen)
-
-        predict = self.hiddenLayer @ self.W2  # (1, wordsNum)
-        self.proba = self.softmax(predict)  # (1, wordsNum)
+        # self.hiddenLayer = x @ self.W1  # (n, embLen)
+        self.hiddenLayer = self.W1[np.argmax(self.x, axis=-1)]  # (n, embLen)
+        predict = self.hiddenLayer @ self.W2  # (n, wordsNum)
+        self.proba = self.softmax(predict)  # (n, wordsNum)
         epsilon = 1e-10
-        loss = -np.mean(y * np.log(self.proba))
+        loss = -np.mean(y * np.log(self.proba + epsilon))
 
         return loss
 
     def backward(self):
-        G = deltaPred = self.proba - self.y  # (1, wordsNum)
+        G = deltaPred = self.proba - self.y  # (n, wordsNum)
         deltaW2 = self.hiddenLayer.T @ G  # (embLen, wordsNum)
-        deltaHidden = G @ self.W2.T  # (1, embLen)
+        deltaHidden = G @ self.W2.T  # (n, embLen)
         deltaW1 = self.x.T @ deltaHidden  # (wordsNum, embLen)
 
         self.W1 -= lr * deltaW1
         self.W2 -= lr * deltaW2
 
 
-def getNeighbors(currLine, currIdx):
+def getNeighbors(currLine, currID):
     global nGrams
-    leftN = currLine[max(0, currIdx - nGrams): currIdx]
-    rightN = currLine[currIdx + 1: currIdx + nGrams + 1]
+    leftN = currLine[max(0, currID - nGrams): currID]
+    rightN = currLine[currID + 1: currID + nGrams + 1]
     return leftN + rightN
 
 
@@ -110,6 +109,7 @@ def saveEmbs():
     filePath = os.path.normpath(filePath)
     with open(filePath, "wb") as file:
         pickle.dump((model.W1, words2Idx), file)
+
 
 
 if __name__ == '__main__':
@@ -138,19 +138,20 @@ if __name__ == '__main__':
         print("\n" + f"Epoch No.{e + 1}".center(60, "-"))
         for lineWords in tqdm(allWords):
             for currIdx, currWord in enumerate(lineWords):
-
                 currOneHot = wordsOneHotMtx[words2Idx.get(currWord)]
                 currOneHot = np.array(currOneHot).reshape(1, -1)
 
                 neighbors = getNeighbors(lineWords, currIdx)
-                for neighbor in neighbors:
-                    neighborOneHot = wordsOneHotMtx[words2Idx.get(neighbor)]
-                    neighborOneHot = np.array(neighborOneHot).reshape(1, -1)
 
-                    if MODEL == "cbow":
-                        loss = model.forward(neighborOneHot, currOneHot)
-                    elif MODEL == "skip-gram":
-                        loss = model.forward(currOneHot, neighborOneHot)
-                    model.backward()
+                neighborsIdx = [words2Idx.get(w) for w in neighbors]
+                neighborsOneHot = wordsOneHotMtx[neighborsIdx]
+                # 将当前词OneHot向量复制len(neighbors)份
+                currOneHot = currOneHot.repeat(len(neighbors), 0)
+
+                if MODEL == "cbow":
+                    loss = model.forward(neighborsOneHot, currOneHot)
+                elif MODEL == "skip-gram":
+                    loss = model.forward(currOneHot, neighborsOneHot)
+                model.backward()
         print(f"\nLoss >> {loss:.4f}")
     saveEmbs()
