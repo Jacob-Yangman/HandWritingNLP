@@ -168,7 +168,7 @@ def validate(model, validateDataloader, validateDataset):
         pred = model.forward(batch_texts)
         bingo += int(sum(pred == batch_labels))
     acc = bingo / len(validateDataset)
-    print(f"\nAcc >> {acc:3%}")
+    print(f"\nAcc >> {acc:.3%}")
 
 
 if __name__ == '__main__':
