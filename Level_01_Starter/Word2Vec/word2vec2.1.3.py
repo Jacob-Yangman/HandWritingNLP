@@ -193,7 +193,7 @@ if __name__ == '__main__':
     epoch = 30
     batch_size = 16
 
-    dataset = LocalDataset(dataPath, sample=None, stopWordsPath=stopWordsPath, step=3, nGram=10, negNum=20)
+    dataset = LocalDataset(dataPath, sample=None, stopWordsPath=stopWordsPath, step=2, nGram=10, negNum=30)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
     embeddingDim = 256
