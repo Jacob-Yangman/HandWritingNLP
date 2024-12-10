@@ -35,8 +35,8 @@ class LegendofConderHeroes(Dataset):
         self.rawData = self.readData(dataPath, sample)
         self.stopWords = set(
             self.readData(stopWordsPath) + ['\u3000', '，', '。', '；', '------------------------------------------'])
-        self.cutData = self.parseData()
-        self.words2Idx, self.idx2Words = self.tokenize()
+        cutData = self.parseData()
+        self.words2Idx, self.idx2Words, self.wordsIds, self.allLineIndices = self.tokenize(cutData)
         self.triples = self.structTriples(step, nGram, negNum)
 
 
@@ -58,36 +58,44 @@ class LegendofConderHeroes(Dataset):
             newData.append(lineCut2)
         return newData
 
-    def tokenize(self):
+    def tokenize(self, cutData):
         words2Idx = dict(UNK=0)
-        for lineWords in self.cutData:
+        allLineIndices = list()
+        for lineWords in cutData:
+            lineIndices = list()
             for word in lineWords:
                 words2Idx[word] = words2Idx.get(word, len(words2Idx))
-
-        return words2Idx, list(words2Idx)
-
+                lineIndices.append(words2Idx[word])
+            allLineIndices.append(lineIndices)
+        return words2Idx, list(words2Idx), list(words2Idx.values()), allLineIndices
 
     def negRandomSample(self, centerID, neighborsID, negNum):
         # sampleRange = set(self.idx2Words) ^ set(neighbors + [self.word2Idx[centerID]])
-        sampleRange = set(self.words2Idx.values()) ^ set([centerID] + neighborsID)
+        # sampleRange = set(self.words2Idx.values()) ^ set([centerID] + neighborsID)
+        negativesID = set()
+        while len(negativesID) < negNum:
+            currNeg = random.choice(self.wordsIds)
+            if currNeg not in set(neighborsID + [centerID]):
+                negativesID.add(currNeg)
 
-        negativesID = random.sample(sampleRange, negNum)
-        # negativesID = [self.word2Idx[w] for w in negatives]
-        negSamples = [(centerID, negID, 0) for negID in negativesID]
+        negSamples = list(zip([centerID] * negNum, negativesID, [0] * negNum))
         return negSamples
 
     def structTriples(self, step, nGram, negNum):
         triples = list()
-        for lineWords in tqdm(self.cutData, desc="Generating triples..."):
-            for curr in range(0, len(lineWords), step):
-                centerID = self.words2Idx[lineWords[curr]]
-                neighbors = (lineWords[max(curr - nGram, 0): curr]
-                             + lineWords[curr + 1: curr + nGram + 1])
-                neighborsID = [self.words2Idx[w] for w in neighbors]
-                triples.extend([(centerID, neiID, 1) for neiID in neighborsID])
+        for lineWordsIds in tqdm(self.allLineIndices, desc="Generating triples..."):
+            # lineWordsIds = [self.words2Idx.get(w) for w in lineWords]
+            for i in range(0, len(lineWordsIds), step):
+                centerID = lineWordsIds[i]
+                neighborsID = (lineWordsIds[max(i - nGram, 0): i]
+                               + lineWordsIds[i + 1: i + nGram + 1])
 
-                negaSamples = self.negRandomSample(centerID, neighborsID, negNum)
-                triples.extend(negaSamples)
+                neiNum = len(neighborsID)
+                triples.extend(zip([centerID] * neiNum, neighborsID, [1] * neiNum))
+
+                negSamples = self.negRandomSample(centerID, neighborsID, negNum)
+
+                triples.extend(negSamples)
         return triples
 
     def __len__(self):
@@ -145,19 +153,19 @@ class Model:
 
 
 if __name__ == '__main__':
+    lr = 0.05
+    epoch = 20
+    batch_size = 32
     dataPath = r"./data/金庸-射雕英雄传txt精校版.txt"
     stopWordsPath = r"./data/hit_stopwords.txt"
     dataset = LegendofConderHeroes(dataPath, sample=500, stopWordsPath=stopWordsPath, step=1, nGram=3, negNum=8)
-    dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
     embeddingDim = 128
     wordsNum = len(dataset.words2Idx)
 
-    lr = 0.1
     model = Model(wordsNum, embeddingDim, lr=lr)
 
-
-    epoch = 3
     for e in range(epoch):
         print("\n" + f"Epoch >> {e + 1}".center(80, "-"))
         for centerWord, otherWord, label in tqdm(dataloader, desc="Training..."):
