@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/22/2024
 @Desc  : 原汁原味Word2Vec

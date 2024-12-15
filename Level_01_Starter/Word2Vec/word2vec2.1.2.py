@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/26/2024
 @Desc  : 基于PyTorch的Dataset和DataLoader和手写Model实现批量Word2vec训练过程

@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/23/2024
 @Desc  : 加载词向量和词表，根据余弦相似度测试训练效果

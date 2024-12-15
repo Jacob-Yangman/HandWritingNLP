@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/23/2024
 @Desc  : 借助torch的Dataset和DataLoader实现批量化送入多句的currWordsOneHot和neighborsOneHot拼成的矩阵

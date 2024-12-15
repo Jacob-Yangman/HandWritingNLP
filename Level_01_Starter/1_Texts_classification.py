@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
     @Author: Jacob
     @Date  : 2024/11/01
     @Desc  : 文本十五分类

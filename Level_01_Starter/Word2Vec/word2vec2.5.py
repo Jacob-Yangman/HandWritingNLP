@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/24/2024
 @Desc  : 负采样1.5  基于Dataset和DataLoader实现批量运算

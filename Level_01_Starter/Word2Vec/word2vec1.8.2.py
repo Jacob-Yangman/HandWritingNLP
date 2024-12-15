@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/23/2024
 @Desc  : 使用cuda运行word2vec1.8.1

@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 11/22/2024
 @Desc  : 基于原味儿Word2Vec优化w1矩阵乘法运算

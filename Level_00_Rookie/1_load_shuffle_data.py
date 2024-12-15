@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
     @Author: Jacob
     @Date  : 2024/09/30
     @Desc  : 数据打乱的思路（采用第二种）

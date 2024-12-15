@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
     @Author: Jacob
     @Date  : 2024/10/06
     @Desc  : 

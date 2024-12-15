@@ -1,5 +1,5 @@
+# coding=utf-8
 """
-encoding: utf-8
 @Author: Jacob Y
 @Date  : 12/3/2024
 @Desc  : 手写最朴素的RNN层
@@ -123,8 +123,8 @@ class MyModel(nn.Module):
 
 
 def train(lr, epoch, batch_size):
-    trainDataPath = r"./data/THUCNews/data/train.txt"
-    devDataPath = r"./data/THUCNews/data/dev.txt"
+    trainDataPath = r"../data/THUCNews/data/train.txt"
+    devDataPath = r"../data/THUCNews/data/dev.txt"
     trainDataset = LocalDataset(trainDataPath, sample=1000, isTrain=True)
     devDataset = LocalDataset(devDataPath)
     devDataset.words2Idx, devDataset.idx2Words = trainDataset.words2Idx, trainDataset.idx2Words
