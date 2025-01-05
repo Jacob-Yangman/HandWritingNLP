@@ -2,7 +2,7 @@
 """
 @Author: Jacob Y
 @Date  : 12/16/2024
-@Desc  : 
+@Desc  : BERT主要框架，复现NSP和MLM两个子任务的主要思路
 编码细节：为避免预训练语料中包含[PAD],[UNK],[CLS],[SEP],[MASK]，
         在预处理时将其更换为<<PAD>>,<<UNK>>,<<CLS>>,<<SEP>>,<<MASK>>
 """

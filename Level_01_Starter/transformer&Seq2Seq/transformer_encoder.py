@@ -4,6 +4,7 @@
 @Date  : 12/06/2024
 @Desc  : 
 """
+import random
 import sys
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
@@ -11,8 +12,8 @@ import torch
 from tqdm import tqdm
 import time
 
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-device = "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
+# device = "cpu"
 
 def readData(filePath, sample=None):
     allTexts, allLabels = list(), list()
@@ -90,9 +91,9 @@ class MultiHeadAttention(nn.Module):
         self.headNum = headNum
         self.d_k = torch.tensor(embDim // headNum)
         assert embDim % headNum == 0, "划分多头错误"
-        self.wQ = nn.Linear(hiddenDim, hiddenDim)
-        self.wK = nn.Linear(hiddenDim, hiddenDim)
-        self.wV = nn.Linear(hiddenDim, hiddenDim)
+        self.wQ = nn.Linear(hiddenDim, hiddenDim, device=device)
+        self.wK = nn.Linear(hiddenDim, hiddenDim, device=device)
+        self.wV = nn.Linear(hiddenDim, hiddenDim, device=device)
 
     def forward(self, x):
         # e.g. x -> (4, 30, 1024)  headNum->4
@@ -158,10 +159,11 @@ class MyTransformer(nn.Module):
 
 
     def forward(self, x):
-        posEmb = self.pe(x)
+        posEmb = self.pe(x).to(device)
+        x = x.to(device)
         x += posEmb
         for block in self.blocks:
-            x = block.forward(x)
+            x = block.forward(x).to(device)
         return x
 
 
@@ -221,8 +223,14 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     for e in range(epoch):
+        COLOURS = list({'BLACK': '\x1b[30m', 'RED': '\x1b[31m', 'GREEN': '\x1b[32m',
+                        'YELLOW': '\x1b[33m', 'BLUE': '\x1b[34m', 'MAGENTA': '\x1b[35m',
+                        'CYAN': '\x1b[36m', 'WHITE': '\x1b[37m'})
         model.train()
-        for batchIdx, batchLabel in tqdm(trainLoader, file=sys.stdout):
+        for batchIdx, batchLabel in tqdm(trainLoader, file=sys.stdout,
+                                         total=len(trainLoader), colour=random.choice(COLOURS),
+                                         desc="Training...", smoothing=0.01
+                                         ):
             batchIdx, batchLabel = batchIdx.to(device), batchLabel.to(device)
             loss = model.forward(batchIdx, batchLabel)
             loss.backward()
@@ -234,7 +242,10 @@ if __name__ == '__main__':
 
         model.eval()
         bingo = 0
-        for batchIdx, batchLabel in tqdm(validateLoader, file=sys.stdout):
+        for batchIdx, batchLabel in tqdm(validateLoader, file=sys.stdout,
+                                         total=len(validateLoader), colour=random.choice(COLOURS),
+                                         desc="Validating...", smoothing=0.01
+                                         ):
             batchIdx, batchLabel = batchIdx.to(device), batchLabel.to(device)
             infer = model.forward(batchIdx)
             bingo += sum(infer == batchLabel)

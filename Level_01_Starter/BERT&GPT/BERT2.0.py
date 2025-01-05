@@ -4,7 +4,8 @@
 @Date  : 12/16/2024
 @Desc  : 优化采样策略和Mask策略
 1. 选取段外3%负样本
-2. MLM策略
+2. 复现原论文中的MLM策略  15% -> 80%
+3. 接入Transformer
 """
 import random
 import sys
