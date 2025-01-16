@@ -1,7 +1,8 @@
 # HandWritingNLP：基于Numpy的高复用深度学习框架 🚀
 欢迎来到 **HandWritingNLP**，这是一个基于 **Numpy** 底层实现的高复用深度学习代码库，旨在复现 **PyTorch** 的主流类和模型以及其他核心功能，支持 **BERT**、**Transformer**、**GPT** 等主流 NLP 模型的构建与训练。
 本仓库旨在提供深层的框架原理剖析和灵活、高效的开发体验。
-![2c22d7d3a1562c76f693824fdc7d958b](https://github.com/user-attachments/assets/2b2f51de-bc57-44b8-927a-b0277cd743e0)
+
+![2c22d7d3a1562c76f693824fdc7d958b](https://github.com/user-attachments/assets/2b2f51de-bc57-44b8-927a-b0277cd743e0#pic_center)
 
 > 本项目中所有示例数据均为Github开源数据和个人手写的deme
 ## 🌟 特性亮点
@@ -85,10 +86,10 @@ class MyLinear(MyModule):
 ## 🎥 动图演示
 
 ### Transformer 模型训练过程
-![Transformer Training](https://media.giphy.com/media/your-transformer-training-gif.gif)
-
+(img-transformer)(./data/PixPin01.gif)]
+![BERT Text Classification(https://github.com/Jacob-Yangman/HandWritingNLP/raw/master/data/PixPin01.gif)]
 ### BERT 文本分类
-![BERT Text Classification](https://media.giphy.com/media/your-bert-classification-gif.gif)
+![BERT Text Classification](https://github.com/Jacob-Yangman/HandWritingNLP/raw/master/data/PixPin01.gif)
 
 ## 📈 性能对比
 
@@ -112,7 +113,8 @@ class MyLinear(MyModule):
 
 - **Email**: 1761789522@qq.com
 - **Wechat**: Long_Live_PRC
-      ![image](https://github.com/user-attachments/assets/c0cdb439-831a-4ce7-abac-770ff6c76804)
+
+![image](https://github.com/user-attachments/assets/c0cdb439-831a-4ce7-abac-770ff6c76804#pic_center =100x100)
 
 ---
 
