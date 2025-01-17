@@ -117,7 +117,11 @@ class MyLinear(MyModule):
 - **Email**: 1761789522@qq.com
 - **Wechat**: Long_Live_PRC
 
-![image](https://github.com/user-attachments/assets/c0cdb439-831a-4ce7-abac-770ff6c76804#pic_center)
+[//]: # (![image]&#40;https://github.com/user-attachments/assets/c0cdb439-831a-4ce7-abac-770ff6c76804#pic_center&#41;)
+
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/c0cdb439-831a-4ce7-abac-770ff6c76804#pic_center" alt="Image" height=300>
+</div>
 
 ---
 
