@@ -1,0 +1,99 @@
+functions:
+  - func_name: "mood_based_dish"
+    description: "根据用户的心情推荐合适的菜品，以改善或增强情绪。"
+    params:
+      - param_name: "mood"
+        required: true
+        description: "当前的心情，例如开心、悲伤、焦虑、放松等。"
+        type: "string"
+    return:
+      type: "object"
+      description: "返回适合当前心情的菜品。"
+      return_params:
+        - param_name: "mood"
+          description: "用户的当前心情。"
+          type: "string"
+        - param_name: "recommended_dish"
+          description: "推荐的菜品名称。"
+          type: "string"
+        - param_name: "recipe"
+          description: "推荐菜品的详细做法。"
+          type: "list"
+
+  - func_name: "dish_and_drink_pairing"
+    description: "根据菜品推荐合适的鸡尾酒，使味觉体验更加协调。"
+    params:
+      - param_name: "dish_name"
+        required: true
+        description: "指定的菜品名称，例如红烧肉、寿司、披萨等。"
+        type: "string"
+    return:
+      type: "object"
+      description: "返回适合该菜品的鸡尾酒推荐。"
+      return_params:
+        - param_name: "dish_name"
+          description: "菜品名称。"
+          type: "string"
+        - param_name: "recommended_drink"
+          description: "适合该菜品的鸡尾酒名称。"
+          type: "string"
+        - param_name: "drink_recipe"
+          description: "推荐鸡尾酒的详细制作方法。"
+          type: "list"
+
+  - func_name: "drink_and_music_pairing"
+    description: "根据鸡尾酒推荐适合的音乐，以提升用餐体验。"
+    params:
+      - param_name: "drink_name"
+        required: true
+        description: "指定的鸡尾酒名称，例如Margarita、Martini、Cosmopolitan等。"
+        type: "string"
+    return:
+      type: "object"
+      description: "返回适合该鸡尾酒的音乐推荐。"
+      return_params:
+        - param_name: "drink_name"
+          description: "鸡尾酒名称。"
+          type: "string"
+        - param_name: "recommended_music"
+          description: "适合该鸡尾酒的音乐推荐列表。"
+          type: "list"
+
+  - func_name: "music_and_activity_suggestion"
+    description: "根据当前播放的音乐推荐适合的活动，以提供更丰富的体验。"
+    params:
+      - param_name: "music_name"
+        required: true
+        description: "当前播放的音乐名称，例如Shape of You、Bohemian Rhapsody等。"
+        type: "string"
+    return:
+      type: "object"
+      description: "返回与音乐风格匹配的活动建议。"
+      return_params:
+        - param_name: "music_name"
+          description: "音乐名称。"
+          type: "string"
+        - param_name: "suggested_activity"
+          description: "推荐的活动，例如跳舞、瑜伽、阅读、冥想等。"
+          type: "string"
+
+  - func_name: "activity_and_travel_recommendation"
+    description: "根据活动推荐适合的旅行目的地，让用户沉浸在更丰富的体验中。"
+    params:
+      - param_name: "activity"
+        required: true
+        description: "当前进行的活动，例如瑜伽、冲浪、徒步等。"
+        type: "string"
+    return:
+      type: "object"
+      description: "返回适合该活动的旅行目的地。"
+      return_params:
+        - param_name: "activity"
+          description: "用户当前的活动。"
+          type: "string"
+        - param_name: "recommended_destination"
+          description: "适合该活动的旅行目的地。"
+          type: "string"
+        - param_name: "destination_details"
+          description: "旅行目的地的简介，包括特色、美食、文化等。"
+          type: "list"
